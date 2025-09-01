@@ -31,3 +31,69 @@ The API is organized into the following categories:
 - `/api/users/stats/*` - User statistics
 
 For detailed information about specific endpoints, see their respective documentation pages.
+
+---
+
+## Using the JavaScript/TypeScript SDK
+
+You can interact with the API easily using our TypeScript SDK. Below are examples and references to help you get started.
+
+### Installation
+
+Simply copy the `sdk/index.ts` and `sdk/example.ts` into your project.
+
+### SDK Overview
+
+```ts
+// Import the SDK
+import { KiloCodeSDK, Message } from './sdk/index';
+
+// Initialize the SDK with your API base URL
+const sdk = new KiloCodeSDK('https://your-domain.com/api');
+```
+
+#### Sending Chat Messages
+
+```ts
+const messages: Message[] = [
+  { role: 'user', content: 'Hello, how are you?', timestamp: Date.now() },
+];
+
+const response = await sdk.chat.sendMessage(messages);
+
+if (response) {
+  console.log('AI Response:', response.response);
+} else {
+  console.log('Failed to get AI response.');
+}
+```
+
+#### Authentication
+
+```ts
+// Get current session
+const session = await sdk.auth.getSession();
+if (session?.user) {
+  console.log('Current User:', session.user.name || session.user.email);
+  console.log('Session Expires:', session.expires);
+} else {
+  console.log('No active session.');
+}
+
+// Sign in (will redirect in browser)
+// sdk.auth.signIn('google');
+
+// Sign out (will redirect in browser)
+// sdk.auth.signOut();
+```
+
+You can find a complete usage example in `sdk/example.ts`. 
+
+---
+
+**References:**
+- [Chat API Reference](./api-chat)
+- [Authentication API Reference](./api-authentication)
+- [User Management API Reference](./api-users)
+
+For detailed information about specific endpoints, see their respective documentation pages.
