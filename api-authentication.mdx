@@ -1,0 +1,86 @@
+```markdown
+# API Authentication
+
+This page explains how authentication works in the Chatbot API, including endpoints, session structure, and how to integrate authentication into your application using our SDK.
+
+## Overview
+
+The Chatbot API uses **session-based authentication** (via [NextAuth.js](https://next-auth.js.org/)). Most endpoints (except `/api/auth/*` and `/api/chat`) require the user to be authenticated.
+
+## Endpoints
+
+- `/api/auth/signin` – Redirects user to sign in using a provider (Google, GitHub, etc.)
+- `/api/auth/signout` – Signs out the current user
+- `/api/auth/session` – Gets the current session object (contains user info and expiry)
+
+## Session Response Example
+
+```json
+{
+  "user": {
+    "id": "user_123",
+    "name": "Alice",
+    "email": "alice@example.com",
+    "image": "https://example.com/avatar.png"
+  },
+  "expires": "2024-07-01T12:00:00.000Z"
+}
+```
+
+## Integrating Authentication with the SDK
+
+You can manage authentication in your frontend using the provided SDK.
+
+### Example: Using Authentication in JavaScript/TypeScript
+
+Assuming you have installed and set up the SDK files from the `sdk` directory, you can interact with authentication as follows:
+
+```typescript
+import { KiloCodeSDK } from './index';
+
+// Initialize the SDK with your API base URL
+const sdk = new KiloCodeSDK('http://localhost:3000'); // Replace with your API base URL
+
+async function runAuthExample() {
+  console.log('--- Authentication Example ---');
+  
+  // Get current session
+  const session = await sdk.auth.getSession();
+  if (session?.user) {
+    console.log('Current User:', session.user.name || session.user.email);
+    console.log('Session Expires:', session.expires);
+  } else {
+    console.log('No active session.');
+  }
+
+  // Note: signIn and signOut will redirect the browser, so they are commented out for direct execution.
+  // To test them, uncomment and run in a browser environment.
+
+  // console.log('Attempting to sign in...');
+  // sdk.auth.signIn('google'); // Redirects to Google login
+
+  // console.log('Attempting to sign out...');
+  // sdk.auth.signOut(); // Redirects to sign out
+}
+
+runAuthExample();
+```
+
+### SDK Auth Class Reference
+
+#### `getSession()`
+
+Fetches the current authentication session. Returns a `Session` object or `null` if no user is logged in.
+
+#### `signIn(provider: string)`
+
+Initiates sign-in with the given [NextAuth.js provider](https://next-auth.js.org/providers/). Redirects the browser to the appropriate login page.
+
+#### `signOut()`
+
+Signs out the current user and redirects to the sign-out page.
+
+---
+
+If you have questions or issues regarding authentication, please reach out via [Support](mailto:support@example.com).
+```
