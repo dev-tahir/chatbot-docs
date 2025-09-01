@@ -1,0 +1,120 @@
+```markdown
+# Authentication
+
+The chatbot application uses robust authentication mechanisms to ensure secure user access. This section covers the authentication features, flows, and how to use them both in the app and via the SDK.
+
+---
+
+## Overview
+
+Authentication is necessary to:
+
+- Restrict access to chat and administration functionalities.
+- Personalize user experience.
+- Enable session and role management.
+
+Most commonly, OAuth providers (such as Google) are used for sign in, but the backend supports extensible strategies.
+
+---
+
+## Authentication Flows
+
+1. **Sign In**: Users can sign in using a supported provider, such as Google. They will be redirected to the provider's sign-in page and returned to the app on success.
+2. **Session Management**: After signing in, the app manages the user's session, checking authentication state and persisting it as needed.
+3. **Sign Out**: Users can terminate their session at any time, after which they will be required to sign in again to access protected features.
+
+---
+
+## Using Authentication in the App
+
+- You can add "Sign In" and "Sign Out" buttons to your app interface.
+- Display user profile details or show login state based on authentication status.
+- Backend endpoints are protected and require a valid authenticated session.
+
+---
+
+## Authentication via SDK
+
+The provided SDK makes it easy to integrate authentication into your own frontend or scripts. Below is an example using the SDK's authentication capabilities.
+
+### SDK Authentication Example
+
+```ts
+import { KiloCodeSDK } from './index';
+
+// Initialize the SDK with your base URL
+const sdk = new KiloCodeSDK('http://localhost:3000'); // Replace with your actual base URL
+
+async function runAuthExample() {
+  console.log('\n--- Authentication Example ---');
+
+  // Get current session
+  const session = await sdk.auth.getSession();
+  if (session?.user) {
+    console.log('Current User:', session.user.name || session.user.email);
+    console.log('Session Expires:', session.expires);
+  } else {
+    console.log('No active session.');
+  }
+
+  // Note: signIn and signOut will redirect the browser, so they are commented out for direct execution.
+  // To test them, uncomment and run in a browser environment.
+
+  // console.log('Attempting to sign in...');
+  // sdk.auth.signIn('google'); // This will redirect to Google login
+
+  // console.log('Attempting to sign out...');
+  // sdk.auth.signOut(); // This will redirect to sign out
+}
+
+// Run the example
+runAuthExample();
+```
+
+**Key Points:**
+- `getSession()` fetches the current authenticated session.
+- `signIn(provider)` starts the sign-in flow with the specified provider (e.g., `"google"`).
+- `signOut()` logs the user out.
+- The `signIn` and `signOut` functions **redirect** the browser for authentication, so they are only usable in a browser context.
+
+---
+
+## SDK Reference
+
+The SDK exposes an `auth` module that provides these methods:
+
+- `getSession()`: Returns the current user session (or `null` if not signed in).
+- `signIn(provider: string)`: Redirects to sign-in with a given provider.
+- `signOut()`: Redirects to sign out.
+
+Example usage:
+
+```ts
+const sdk = new KiloCodeSDK('https://your-api-base-url.com');
+const session = await sdk.auth.getSession();
+if (session?.user) {
+  // User is signed in!
+  console.log('Welcome', session.user.name || session.user.email);
+} else {
+  // Not signed in
+  sdk.auth.signIn('google');
+}
+```
+
+---
+
+## FAQ
+
+**Q:** _Can I use custom providers?_
+
+A: Yes, as long as the backend supports them. Pass your provider name to `signIn()`.
+
+**Q:** _How do I check if a user is signed in?_
+
+A: Use `getSession()`, which returns the session data if authenticated or `null` otherwise.
+
+---
+
+For further questions, contact [Support](mailto:support@example.com).
+
+```
