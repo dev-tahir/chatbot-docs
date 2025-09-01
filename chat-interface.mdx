@@ -35,3 +35,72 @@ export default function YourComponent() {
 ## Customization
 
 The chat interface can be customized through props and CSS styling. See the component documentation for available options.
+
+## SDK Example
+
+You can also interact with the chat API programmatically using the provided SDK. Here is a TypeScript example showing how to send and receive messages using the SDK:
+
+```ts
+import { KiloCodeSDK, Message } from './index';
+
+// Initialize the SDK with your base URL
+const sdk = new KiloCodeSDK('http://localhost:3000'); // Replace with your actual base URL
+
+async function runChatExample() {
+  console.log('--- Chat Example ---');
+  const messages: Message[] = [
+    { role: 'user', content: 'Hello, how are you?', timestamp: Date.now() },
+  ];
+
+  const chatResponse = await sdk.chat.sendMessage(messages);
+
+  if (chatResponse) {
+    console.log('AI Response:', chatResponse.response);
+  } else {
+    console.log('Failed to get AI response.');
+  }
+
+  // Example with conversation history
+  const conversation: Message[] = [
+    { role: 'user', content: 'What is the capital of France?', timestamp: Date.now() - 10000 },
+    { role: 'bot', content: 'The capital of France is Paris.', timestamp: Date.now() - 5000 },
+    { role: 'user', content: 'And what about Germany?', timestamp: Date.now() },
+  ];
+
+  const chatResponse2 = await sdk.chat.sendMessage(conversation);
+
+  if (chatResponse2) {
+    console.log('AI Response:', chatResponse2.response);
+  } else {
+    console.log('Failed to get AI response.');
+  }
+}
+
+async function runAuthExample() {
+  console.log('\n--- Authentication Example ---');
+
+  // Get current session
+  const session = await sdk.auth.getSession();
+  if (session?.user) {
+    console.log('Current User:', session.user.name || session.user.email);
+    console.log('Session Expires:', session.expires);
+  } else {
+    console.log('No active session.');
+  }
+
+  // Note: signIn and signOut will redirect the browser, so they are commented out for direct execution.
+  // To test them, uncomment and run in a browser environment.
+
+  // console.log('Attempting to sign in...');
+  // sdk.auth.signIn('google'); // This will redirect to Google login
+
+  // console.log('Attempting to sign out...');
+  // sdk.auth.signOut(); // This will redirect to sign out
+}
+
+// Run the examples
+runChatExample();
+runAuthExample();
+```
+
+> **Tip:** You can find the full SDK implementation in the `sdk/` directory of the project.
