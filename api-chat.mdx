@@ -1,0 +1,173 @@
+```markdown
+# Chat API
+
+The Chat API allows clients to send messages to the AI chatbot and receive responses. It is essential for developing chat interfaces and integrating the chatbot with other applications.
+
+---
+
+## Endpoints
+
+### `POST /api/chat`
+
+Send a list of messages (the user's message plus optional conversation history) to receive an AI response.
+
+**Request Body:**
+```json
+{
+  "messages": [
+    {
+      "role": "user" | "bot",
+      "content": "string",
+      "timestamp": 1234567890
+    }
+    // ... more messages (conversation history)
+  ]
+}
+```
+
+**Response:**
+```json
+{
+  "response": "AI reply string"
+}
+```
+
+**Example Request:**
+```http
+POST /api/chat HTTP/1.1
+Content-Type: application/json
+
+{
+  "messages": [
+    { "role": "user", "content": "Hello, how are you?", "timestamp": 1715974399000 }
+  ]
+}
+```
+
+**Example Response:**
+```json
+{
+  "response": "Hello! I'm an AI chatbot. How can I assist you today?"
+}
+```
+
+---
+
+## SDK Usage
+
+A TypeScript/JavaScript SDK is available for simple API integration. See below for the class and usage example.
+
+---
+
+### SDK Interfaces & Usage
+
+```ts
+// sdk/index.ts
+
+export interface Message {
+  role: 'user' | 'bot';
+  content: string;
+  timestamp: number;
+}
+
+export interface ChatResponse {
+  response: string;
+}
+
+// ChatModule for SDK (simplified)
+class ChatModule {
+  constructor(private baseUrl: string) {}
+
+  async sendMessage(messages: Message[]): Promise<ChatResponse | null> {
+    try {
+      const response = await fetch(`${this.baseUrl}/api/chat`, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ messages }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const chatResponse: ChatResponse = await response.json();
+      return chatResponse;
+    } catch (error) {
+      console.error("Error sending message:", error);
+      return null;
+    }
+  }
+}
+
+// Main SDK Class
+export class KiloCodeSDK {
+  public chat: ChatModule;
+  constructor(baseUrl: string) {
+    this.chat = new ChatModule(baseUrl);
+  }
+}
+```
+
+---
+
+### Example: Sending Messages with the SDK
+
+```ts
+import { KiloCodeSDK, Message } from './index';
+
+// Initialize the SDK with your base URL
+const sdk = new KiloCodeSDK('http://localhost:3000'); // Replace with your actual base URL
+
+async function runChatExample() {
+  console.log('--- Chat Example ---');
+  const messages: Message[] = [
+    { role: 'user', content: 'Hello, how are you?', timestamp: Date.now() },
+  ];
+
+  const chatResponse = await sdk.chat.sendMessage(messages);
+
+  if (chatResponse) {
+    console.log('AI Response:', chatResponse.response);
+  } else {
+    console.log('Failed to get AI response.');
+  }
+
+  // Example with conversation history
+  const conversation: Message[] = [
+    { role: 'user', content: 'What is the capital of France?', timestamp: Date.now() - 10000 },
+    { role: 'bot', content: 'The capital of France is Paris.', timestamp: Date.now() - 5000 },
+    { role: 'user', content: 'And what about Germany?', timestamp: Date.now() },
+  ];
+
+  const responseWithHistory = await sdk.chat.sendMessage(conversation);
+
+  if (responseWithHistory) {
+    console.log('AI Response:', responseWithHistory.response);
+  } else {
+    console.log('Failed to get AI response for conversation.');
+  }
+}
+
+runChatExample();
+```
+
+---
+
+## Message Object
+
+- **role**: `"user"` or `"bot"`. Indicates who sent the message.
+- **content**: The message text.
+- **timestamp**: Unix epoch-milliseconds timestamp.
+
+---
+
+## Notes
+
+- The AI uses the conversation history (ordered messages) for context and continuity.
+- Ensure timestamps are in `number` format (milliseconds since epoch) for best results.
+
+---
+
+## See Also
+
+- [Authentication](./authentication)
+- [API Introduction](./api-introduction)
+```
