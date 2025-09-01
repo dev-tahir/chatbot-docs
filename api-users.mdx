@@ -1,0 +1,165 @@
+```markdown
+# Users API
+
+The Users API provides endpoints and SDK methods for retrieving user statistics and managing user profiles.
+
+## Overview
+
+Use the Users API to:
+
+- Fetch user statistics (total users, active users, etc.)
+- Retrieve user profiles by ID
+- Update user profiles
+
+---
+
+## Endpoints
+
+### `GET /api/users/stats`
+
+Retrieve aggregated statistics about user accounts.
+
+**Response Example:**
+```json
+{
+  "totalUsers": 1056,
+  "activeUsers": 142,
+  "recentUsers": 28,
+  "timestamp": "2024-06-05T12:00:00Z"
+}
+```
+
+**Response Fields:**
+
+| Field        | Type   | Description                             |
+|--------------|--------|-----------------------------------------|
+| totalUsers   | number | Total number of registered users        |
+| activeUsers  | number | Currently active users                  |
+| recentUsers  | number | Number of users active in recent period |
+| timestamp    | string | ISO 8601 timestamp of stats snapshot    |
+
+---
+
+### `GET /api/users/{userId}/profile`
+
+Retrieve a user's profile information.
+
+**Path Parameter:**
+
+- `userId` — The user's unique identifier
+
+**Response Example:**
+```json
+{
+  "id": "user123",
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "image": "https://gravatar.com/avatar/123"
+}
+```
+
+---
+
+### `PUT /api/users/{userId}/profile`
+
+Update a user's profile.
+
+**Path Parameter:**
+
+- `userId` — The user's unique identifier
+
+**Request Body Example:**
+```json
+{
+  "name": "Jane Doe"
+}
+```
+
+**Response:**
+Returns the updated user profile object.
+
+---
+
+## TypeScript SDK Usage
+
+The SDK provides convenient methods for interacting with users and user stats.
+
+### Types
+
+```ts
+export interface UserStats {
+  totalUsers: number;
+  activeUsers: number;
+  recentUsers: number;
+  timestamp: string;
+}
+
+export interface UserProfile {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  // ...other fields
+}
+```
+
+---
+
+### Fetch User Statistics
+
+```ts
+const stats = await sdk.stats.getStats();
+if (stats) {
+  console.log('User Stats:', stats);
+}
+```
+
+---
+
+### Get User Profile
+
+```ts
+const userId = 'user123';
+const profile = await sdk.profile.getProfile(userId);
+if (profile) {
+  console.log('User Profile:', profile);
+}
+```
+
+---
+
+### Update User Profile
+
+```ts
+const updatedProfile = await sdk.profile.updateProfile(userId, { name: 'Jane Doe' });
+if (updatedProfile) {
+  console.log('Updated User Profile:', updatedProfile);
+}
+```
+
+---
+
+## Full Example
+
+```ts
+// Fetch stats
+const stats = await sdk.stats.getStats();
+console.log('User Stats:', stats);
+
+// Get a user profile
+const userId = 'user123';
+const profile = await sdk.profile.getProfile(userId);
+console.log('User Profile:', profile);
+
+// Update user's profile
+const updatedProfile = await sdk.profile.updateProfile(userId, { name: 'Jane Doe' });
+console.log('Updated User Profile:', updatedProfile);
+```
+
+---
+
+## See Also
+
+- [API Introduction](./api-introduction)
+- [API Authentication](./api-authentication)
+```
