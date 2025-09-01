@@ -1,0 +1,163 @@
+```markdown
+# Users API
+
+The Users API provides endpoints to manage and retrieve user information, statistics, and profile data within the Chatbot platform.
+
+---
+
+## Endpoints
+
+### Get User Statistics
+
+Retrieve general statistics about users in your chatbot application, such as the total number of users and actives.
+
+- **Endpoint:** `GET /api/users/stats`
+- **Response:**
+
+```json
+{
+  "totalUsers": 123,
+  "activeUsers": 47,
+  "recentUsers": 12,
+  "timestamp": "2024-06-26T12:00:00Z"
+}
+```
+
+#### TypeScript Interface
+
+```ts
+export interface UserStats {
+  totalUsers: number;
+  activeUsers: number;
+  recentUsers: number;
+  timestamp: string;
+}
+```
+
+#### SDK Example
+
+```ts
+const stats = await sdk.stats.getStats();
+if (stats) {
+  console.log('User Stats:', stats);
+} else {
+  console.log('Failed to get user stats.');
+}
+```
+
+---
+
+### Get User Profile
+
+Fetch a specific user's profile information by user ID.
+
+- **Endpoint:** `GET /api/users/{userId}/profile`
+- **Response:**
+
+```json
+{
+  "id": "user123",
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "image": null
+}
+```
+
+#### TypeScript Interface
+
+```ts
+export interface UserProfile {
+  id: string;
+  name?: string | null;
+  email?: string | null;
+  image?: string | null;
+  // Add other profile fields as needed
+}
+```
+
+#### SDK Example
+
+```ts
+const userId = 'user123';
+const profile = await sdk.profile.getProfile(userId);
+if (profile) {
+  console.log('User Profile:', profile);
+} else {
+  console.log('Failed to get user profile.');
+}
+```
+
+---
+
+### Update User Profile
+
+Update a specific user's profile information.
+
+- **Endpoint:** `PUT /api/users/{userId}/profile`
+- **Request Body:**
+
+```json
+{
+  "name": "Jane Doe",
+  "email": "jane.doe@example.com"
+}
+```
+
+- **Response:**
+
+```json
+{
+  "id": "user123",
+  "name": "Jane Doe",
+  "email": "jane.doe@example.com",
+  "image": null
+}
+```
+
+#### SDK Example
+
+```ts
+const updatedProfile = await sdk.profile.updateProfile('user123', { name: 'Jane Doe' });
+if (updatedProfile) {
+  console.log('Updated User Profile:', updatedProfile);
+} else {
+  console.log('Failed to update user profile.');
+}
+```
+
+---
+
+## SDK Usage
+
+To use the Users API through the SDK:
+
+```ts
+import { KiloCodeSDK } from '...'; // update with your SDK import path
+
+const sdk = new KiloCodeSDK('https://your-api-url.com');
+
+// Get user stats
+const stats = await sdk.stats.getStats();
+
+// Get user profile
+const profile = await sdk.profile.getProfile('user123');
+
+// Update user profile
+const updatedProfile = await sdk.profile.updateProfile('user123', { name: 'Jane Doe' });
+```
+
+---
+
+## Types Summary
+
+- [`UserStats`](#get-user-statistics)
+- [`UserProfile`](#get-user-profile)
+
+---
+
+## See Also
+
+- [API Introduction](api-introduction)
+- [API Authentication](api-authentication)
+- [Chat API](api-chat)
+```
