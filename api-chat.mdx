@@ -1,0 +1,58 @@
+```markdown
+# Chat API
+
+The Chat API allows you to send and receive messages via the chatbot.
+
+## Endpoints
+
+### `POST /api/chat`
+
+Send a message to the chatbot and receive a response.
+
+#### Request Body
+
+```json
+{
+  "message": "string",
+  "sessionId": "string"
+}
+```
+
+- `message` (string): The user's message to the chatbot.
+- `sessionId` (string): (Optional) A unique identifier for the user's chat session.
+
+#### Response
+
+```json
+{
+  "response": "string"
+}
+```
+
+- `response` (string): The chatbot's reply.
+
+---
+
+### Example
+
+```bash
+curl -X POST https://your-domain.com/api/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Hello!", "sessionId": "abc123"}'
+```
+
+---
+
+## Error Handling
+
+If the request is invalid, the API responds with a relevant error message and HTTP status code.
+
+---
+
+## See Also
+
+- [API Authentication](./api-authentication)
+- [API Users](./api-users)
+```
+**No changes are needed for this file based on the provided patch. The existing markdown remains complete and accurate.**
+```
