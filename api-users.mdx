@@ -1,0 +1,118 @@
+```markdown
+# User API
+
+This page documents the endpoints and usage for user-related API operations in the Chatbot application.
+
+---
+
+## Get User by ID
+
+Retrieve a user's details by their unique `id`. This endpoint returns the user profile, including their posts and connected accounts.
+
+### Endpoint
+
+```
+GET /api/users/:id
+```
+
+### Path Parameters
+
+| Parameter | Type   | Description         |
+|-----------|--------|---------------------|
+| `id`      | string | The user's ID.      |
+
+### Response
+
+- **200 OK**: Returns user data including posts and accounts.
+- **404 Not Found**: User not found.
+- **500 Internal Server Error**: Server-side error.
+
+#### Example: Success
+
+```json
+{
+  "id": "user_123",
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "posts": [
+    {
+      "id": "post_001",
+      "title": "My First Chat",
+      "content": "...",
+      // other post fields
+    }
+  ],
+  "accounts": [
+    {
+      "id": "account_abc",
+      "provider": "github",
+      "providerAccountId": "janedoe"
+      // other account fields
+    }
+  ]
+  // other user fields
+}
+```
+
+#### Example: User Not Found
+
+```json
+{
+  "message": "User not found"
+}
+```
+
+#### Example: Error
+
+```json
+{
+  "message": "Error fetching user"
+}
+```
+
+---
+
+## Implementation Notes
+
+- The API uses the `prisma` client to fetch user information from the database.
+- The response includes related `posts` and `accounts` for the user.
+- Error handling covers both user-not-found and server errors.
+
+**Sample Implementation (server route):**
+```ts
+import { NextResponse } from 'next/server';
+import { prisma } from '../../../../lib/prisma';
+
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = params;
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        posts: true,      // Include posts by the user
+        accounts: true,   // Include user accounts
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    return NextResponse.json({ message: 'Error fetching user' }, { status: 500 });
+  }
+}
+```
+
+---
+
+## See Also
+
+- [Authentication API](./api-authentication)
+- [Chat API](./api-chat)
+```
