@@ -31,3 +31,49 @@ The API is organized into the following categories:
 - `/api/users/stats/*` - User statistics
 
 For detailed information about specific endpoints, see their respective documentation pages.
+
+---
+
+## Blog Posts API
+
+A new **Blog Posts** API is available at:
+
+```
+GET /api/blog
+```
+
+### Description
+
+Fetch a list of blog posts. Each post includes:
+
+- `id`: Unique identifier for the post
+- `title`: Title of the blog post
+- `content`: Content of the blog post
+- `author`: Object containing the post author’s `name`
+
+Example response:
+
+```json
+[
+  {
+    "id": "1",
+    "title": "Welcome to our blog!",
+    "content": "This is the first post of many.",
+    "author": { "name": "Admin" }
+  }
+]
+```
+
+### Error Handling
+
+If the API fails, you will receive an appropriate HTTP error status with an error message in the response body.
+
+For example, a 500 error might return:
+
+```json
+{ "error": "Internal Server Error" }
+```
+
+---
+
+For more details on data structure or consuming the Blog API, see your relevant API reference documentation.
