@@ -1,0 +1,144 @@
+```markdown
+# API: Users
+
+This page documents the Users API endpoints, which allow you to retrieve information about users in your application.
+
+---
+
+## Get a Single User
+
+Fetch detailed information about a specific user, including their posts and connected accounts.
+
+### Endpoint
+
+```
+GET /api/users/{id}
+```
+
+#### Path Parameters
+
+| Name | Type   | Description               |
+|------|--------|---------------------------|
+| id   | string | The unique user ID to fetch.|
+
+---
+
+### Example Request
+
+```http
+GET /api/users/12345
+```
+
+---
+
+### Example Response
+
+<details>
+<summary>200 OK</summary>
+
+```json
+{
+  "id": "12345",
+  "name": "Jane Doe",
+  "email": "jane@example.com",
+  "image": "https://example.com/avatar.jpg",
+  "posts": [
+    {
+      "id": "post1",
+      "title": "Hello World",
+      // ...other post fields
+    }
+  ],
+  "accounts": [
+    {
+      "id": "acc1",
+      "provider": "github",
+      "providerAccountId": "987654321",
+      // ...other account fields
+    }
+  ]
+}
+```
+</details>
+
+<details>
+<summary>404 Not Found</summary>
+
+```json
+{
+  "message": "User not found"
+}
+```
+</details>
+
+<details>
+<summary>500 Server Error</summary>
+
+```json
+{
+  "message": "Error fetching user"
+}
+```
+</details>
+
+---
+
+### Details
+
+- Returns a user's information by `id`.
+- The response includes:
+  - User profile fields (like `name`, `email`, `image`)
+  - User's `posts` (array)
+  - User's `accounts` (array)
+
+If the user does not exist, a 404 error is returned.
+
+---
+
+### Implementation
+
+<details>
+<summary>Source (app/api/users/[id]/route.ts)</summary>
+
+```ts
+import { NextResponse } from 'next/server';
+import { prisma } from '../../../../lib/prisma';
+
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const { id } = params;
+    const user = await prisma.user.findUnique({
+      where: { id },
+      include: {
+        posts: true, // Include posts by the user
+        accounts: true, // Include user accounts
+      },
+    });
+
+    if (!user) {
+      return NextResponse.json({ message: 'User not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    return NextResponse.json({ message: 'Error fetching user' }, { status: 500 });
+  }
+}
+```
+</details>
+
+---
+
+## Notes
+
+- This endpoint is secure and should be protected (e.g., only accessible to authorized users).
+- The included fields (`posts` and `accounts`) provide richer context about the user's activity and connected authentication methods.
+
+---
+
+Still have questions? [Contact support](mailto:support@example.com)
+```
