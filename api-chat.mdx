@@ -1,0 +1,114 @@
+```markdown
+# Chat API
+
+The Chat API allows your application to interact with the chatbot, send and receive messages, manage conversations, and implement real-time chat features.
+
+## Endpoints
+
+### Send Message
+
+`POST /api/chat`
+
+Send a message to the chatbot and receive a response.
+
+#### Request Body
+
+```json
+{
+  "message": "string",
+  "conversationId": "string" // (optional) ID of the ongoing conversation.
+}
+```
+
+#### Response
+
+```json
+{
+  "id": "string",
+  "message": "string",
+  "conversationId": "string",
+  "timestamp": "ISO8601 string"
+}
+```
+
+### Get Messages
+
+`GET /api/chat?conversationId=<id>`
+
+Fetch all messages for a conversation.
+
+#### Response
+
+```json
+[
+  {
+    "id": "string",
+    "message": "string",
+    "sender": "user|bot",
+    "timestamp": "ISO8601 string"
+  }
+]
+```
+
+---
+
+## Blog Posts API
+
+A new API endpoint is available to list published blog posts.
+
+### Get Published Blog Posts
+
+`GET /api/blog`
+
+Fetches all blog posts that are published, along with their author information.
+
+#### Response
+
+```json
+[
+  {
+    "id": "string",
+    "title": "string",
+    "content": "string",
+    "published": true,
+    "author": {
+      "id": "string",
+      "name": "string",
+      "email": "string",
+      // ...other user fields
+    },
+    "createdAt": "ISO8601 string",
+    "updatedAt": "ISO8601 string"
+  }
+]
+```
+
+- Only posts where `published: true` are returned.
+- Each post includes its author details.
+
+---
+
+## Models
+
+### Post
+
+The `Post` model represents a blog post in the system.
+
+| Field      | Type     | Description                        |
+| ---------- | -------- | ---------------------------------- |
+| id         | String   | Unique identifier                  |
+| title      | String   | Post title                         |
+| content    | String?  | Post content (optional)            |
+| published  | Boolean  | Whether the post is published      |
+| author     | User     | The user who authored the post     |
+| authorId   | String   | ID of the author                   |
+| createdAt  | DateTime | When the post was created          |
+| updatedAt  | DateTime | When the post was last updated     |
+
+---
+
+## See Also
+
+- [API Authentication](./api-authentication)
+- [API Users](./api-users)
+```
