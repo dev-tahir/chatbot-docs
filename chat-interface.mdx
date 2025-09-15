@@ -5,33 +5,67 @@ description: 'Learn about the chat interface component and its features'
 
 # Chat Interface
 
-The chat interface is the main component of the application, providing real-time communication capabilities.
+The chat interface is the main component of the application, providing an AI-powered conversation experience. It handles message input, communication with the `/api/chat` route, local-storage persistence and various UI conveniences (dark mode, chat clearing, etc.).
 
-## Features
+## Key Features (Current Implementation)
 
-- Real-time message updates
-- Message history
-- Typing indicators
-- Message status (sent, delivered, read)
-- File attachments support
-- Responsive design
+- Real-time message exchange with Gemini AI
+- Local browser storage per signed-in user (chat history is automatically saved and restored)
+- Typing indicator while the AI is generating a response
+- Dark- / light-mode toggle
+- Per-message timestamp display
+- Character counter & 1000-character soft limit with validation
+- Delete individual user messages
+- Clear entire chat history
+- Links to recent conversation history (`/conversations`) and settings (`/settings`)
+- Google OAuth sign-out button (uses `next-auth`)
+- Responsive, mobile-first design
+
+> Note  
+> The earlier documentation listed "message status (sent, delivered, read)" and "file attachments support". These features are **not** implemented in the current `ChatInterface.tsx` and have therefore been removed from the feature list.
 
 ## Usage
 
-The chat interface is implemented in `app/components/ChatInterface.tsx`. To use it in your own component:
+`ChatInterface` is a **client component** located at `app/components/ChatInterface.tsx`.
 
 ```tsx
 import ChatInterface from '@/components/ChatInterface';
 
-export default function YourComponent() {
-  return (
-    <ChatInterface 
-      // Add your props here
-    />
-  );
+export default function ChatPage() {
+  return <ChatInterface />; // no props required
 }
 ```
 
+Requirements:
+
+1. The user must be authenticated via **NextAuth** (Google provider) so that `useSession()` can supply the session object used for per-user chat history keys.
+2. The `/api/chat` route must be correctly configured with your Gemini API key (`GEMINI_API_KEY`).
+
+## How It Works
+
+1. **Message Flow**  
+   - On form submit, the component sends the full message array (including the new user message) to `/api/chat`.  
+   - The route responds with `data.response`, which is appended as a bot message.
+
+2. **Persistence**  
+   - History is stored under the key `gemini-chat-history-<user.email>` in `localStorage`.  
+   - Clearing the chat removes this key; deleting a single message updates the stored array.
+
+3. **UI Enhancements**  
+   - A `DarkModeToggle` component in the header switches themes using `next-themes`.  
+   - A loading “AI is thinking…” indicator with animated dots appears while waiting for a response.
+
 ## Customization
 
-The chat interface can be customized through props and CSS styling. See the component documentation for available options.
+Because the component is self-contained and takes no props, customization is done by **editing the component directly** or **extracting sub-components**. Common modifications include:
+
+- Adjusting Tailwind classes for brand colors or typography.
+- Changing the 1000-character limit.
+- Extending the header actions (e.g., adding export / share buttons).
+- Integrating additional message types (images, files) by altering the message schema and render logic.
+
+For larger changes (e.g., supporting file uploads or delivery receipts), consider creating a wrapper component or rewriting the message model to store extra metadata.
+
+---
+
+Need help extending the chat interface? Reach out via the [Support](/support) page or open an issue on GitHub.
