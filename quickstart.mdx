@@ -9,42 +9,70 @@ Follow these steps to get your chatbot instance up and running quickly.
 
 ## Prerequisites
 
-- Node.js 16.8 or later
-- npm or yarn package manager
-- A database (PostgreSQL recommended)
+- **Node.js 18+**
+- npm, yarn, or pnpm package manager
+- A Google Cloud Project with the Gemini API enabled
+- Google OAuth credentials (Client ID & Client Secret)
+- A database (MySQL is used in the project examples, but any Prisma-supported database will work)
 
 ## Installation
 
-1. Clone the repository:
+1. **Clone the repository:**
+
 ```bash
 git clone https://github.com/dev-tahir/chatbot.git
 cd chatbot
 ```
 
-2. Install dependencies:
+2. **Install dependencies:**
+
 ```bash
-npm install
+# choose one of the following package managers
+npm install      # npm
 # or
-yarn install
+yarn install     # yarn
+# or
+pnpm install     # pnpm
 ```
 
-3. Set up environment variables:
-```bash
-cp tmp.env .env
-```
-Edit the `.env` file with your configuration.
+3. **Set up environment variables:**
 
-4. Set up the database:
+Create a `.env.local` file in the project root and add the following variables (replace the placeholder values with your own):
+
+```env
+# Google OAuth
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+
+# NextAuth
+NEXTAUTH_URL=http://localhost:3000
+NEXTAUTH_SECRET=your_nextauth_secret
+
+# Gemini API
+gemini_api_key=your_gemini_api_key
+
+# Database (example for MySQL)
+DATABASE_URL="mysql://USER:PASSWORD@HOST:PORT/DATABASE"
+```
+
+4. **Generate Prisma client & push the schema:**
+
 ```bash
 npx prisma generate
 npx prisma db push
 ```
 
-5. Start the development server:
+5. **Start the development server:**
+
 ```bash
-npm run dev
+# choose one of the following package managers
+npm run dev      # npm
 # or
-yarn dev
+yarn dev         # yarn
+# or
+pnpm dev         # pnpm
 ```
 
-Your chatbot should now be running at `http://localhost:3000`!
+6. Open `http://localhost:3000` in your browser to use the chatbot!
+
+Your chatbot should now be up and running 🎉

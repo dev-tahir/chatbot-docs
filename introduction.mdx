@@ -5,31 +5,41 @@ description: 'Welcome to the Chatbot documentation'
 
 # Welcome to Chatbot
 
-This is a Next.js-based chatbot application that provides real-time chat functionality with advanced features like authentication and admin controls.
+This is a modern Next.js-based chatbot application that integrates Google’s Gemini AI to provide intelligent, real-time conversations with advanced features like authentication, dark-mode support, and an admin dashboard.
 
 ## Features
 
-- Real-time chat interface
-- User authentication
-- Admin dashboard
-- User statistics
-- Responsive design
-- Next.js 13+ App Router
-- TypeScript support
+- **AI-powered conversations** using Gemini AI
+- **Google authentication** (NextAuth.js)
+- **Real-time chat interface** with typing indicators and message status
+- **Local storage** chat history persistence
+- **Dark mode toggle**
+- **Admin dashboard** for user management
+- **Blog module** with API and page routes
+- **User statistics** endpoint
+- **Responsive design**
+- **Next.js 14+ App Router** (currently running on Next 15)
+- **TypeScript support**
 
 ## Project Structure
 
-The project follows a modern Next.js 13+ structure with the App Router:
+The project follows the App Router paradigm introduced in Next.js 14+. A simplified directory overview is shown below:
 
 ```bash
 app/
+├── about/            # About page
 ├── admin/            # Admin dashboard
-├── api/             # API routes
-│   ├── auth/        # Authentication endpoints
-│   ├── chat/        # Chat endpoints
-│   └── users/       # User management endpoints
-├── components/      # Reusable components
-└── settings/       # User settings
+├── api/              # API routes
+│   ├── auth/         # Authentication endpoints
+│   ├── blog/         # Blog endpoints
+│   ├── chat/         # Chat endpoints
+│   └── users/        # User management & stats endpoints
+├── blog/             # Public blog pages
+├── components/       # Reusable UI components (e.g., ChatInterface, DarkModeToggle)
+├── conversation/     # Chat conversation pages
+├── profile/          # User profile pages
+├── settings/         # User settings pages
+└── ...               # Additional feature pages (contact, help, etc.)
 ```
 
 ## Getting Started
